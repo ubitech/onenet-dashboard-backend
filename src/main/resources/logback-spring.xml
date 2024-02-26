@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <property name="LOGS" value="./logs" />
+
+  <appender name="Console"
+    class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>
+        %black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %green(%C{1.}): %msg%n%throwable
+      </Pattern>
+    </layout>
+  </appender>
+
+  <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOGS}/onenet-logger.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${LOGS}/onenet-logger-%i.log</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>10</maxIndex>
+    </rollingPolicy>
+
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <maxFileSize>15MB</maxFileSize>
+    </triggeringPolicy>
+
+    <encoder
+      class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+    </encoder>
+  </appender>
+
+  <appender name="GeoFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOGS}/geo/geolocation-onenet-logger.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${LOGS}/geo/geolocation-onenet-logger-%i.log</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>10</maxIndex>
+    </rollingPolicy>
+
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <maxFileSize>15MB</maxFileSize>
+    </triggeringPolicy>
+
+    <encoder
+      class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <Pattern>%d %m%n</Pattern>
+    </encoder>
+  </appender>
+
+  <!-- Log level precedence ERROR, WARN, INFO, DEBUG, TRACE -->
+  <root level="info">
+    <appender-ref ref="RollingFile" />
+    <appender-ref ref="Console" />
+  </root>
+
+  <logger name="eu.ubitech" level="debug" additivity="false">
+    <appender-ref ref="RollingFile" />
+    <appender-ref ref="Console" />
+  </logger>
+
+  <logger name="eu.ubitech.onenet.interceptors.HttpRequestsInterceptor" level="info" additivity="false">
+    <appender-ref ref="GeoFile" />
+    <appender-ref ref="Console" />
+    <appender-ref ref="RollingFile" />
+  </logger>
+
+</configuration>

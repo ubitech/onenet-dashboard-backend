@@ -1,0 +1,61 @@
+server:
+  port: 8080
+
+# api rate limiting
+ratelimit:
+  capacity: 120 # max api requests a user can make every interval
+  token-refill: 40 # new api requests that are refilled every interval
+  refill-interval-in-minutes: 1 # interval duration (in minutes)
+
+
+
+# admin keycloak
+keycloak:
+  auth-server-url: http://localhost:8090/auth
+  realm: main-authentication
+  resource: login-app
+  public-client: "true"
+  ssl-required: external
+
+# REST requests keycloak
+mykeyclient:
+  client-id: login-app
+  scope: "openid, profile"
+  authorization-grant-type: password
+  admin-user: admin
+  admin-pass: admin
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8090/auth/realms/main-authentication
+  elasticsearch:
+    uris:
+     - "http://10.10.14.6:9200"
+    username: elastic
+    password: changeme
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+
+# the minimum interval time (sec) for refreshing SSE events in monitoring HTTP transactions
+min-interval: 5
+min-interval-alerts: 60
+
+# used for the RestClient
+elastic-url: 10.10.14.6:9200
+elastic-user: elastic
+elastic-pass: changeme
+
+analytics-url: http://analytics:5005
